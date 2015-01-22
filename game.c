@@ -198,7 +198,7 @@ void game_routine_attack_us(Game *game, Message_Attack *message_attack) {
 void game_routine_move_us(Game *game, Message_Move *m) {
     Player *p;
 
-    if (m->x < 0 || m->y < 0 || m->x >= game->map.x || m->y >= game->map.y || game->map.field[m->y][m->x] != FIELD_TYPE_ROAD)
+    if (m->x >= game->map.x || m->y >= game->map.y || game->map.field[m->y][m->x] != FIELD_TYPE_ROAD)
         return;
 
     p = game_find_player_by_uuid(game, m->uuid, 0);

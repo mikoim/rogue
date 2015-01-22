@@ -259,7 +259,7 @@ void do_move(int key) {
             break;
     }
 
-    if (x < 0 || y < 0 || x >= g_map.x || y >= g_map.y) {
+    if (x >= g_map.x || y >= g_map.y) {
         return;
     }
 

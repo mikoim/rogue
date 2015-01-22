@@ -54,7 +54,7 @@ void mob_routine_move(Game *game) {
                     break;
             }
 
-            if (x < 0 || x >= game->map.x || y < 0 || y >= game->map.y || game->map.field[y][x] != FIELD_TYPE_ROAD) {
+            if(x >= game->map.x || y >= game->map.y || game->map.field[y][x] != FIELD_TYPE_ROAD) {
                 return;
             }
 
