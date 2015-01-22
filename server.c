@@ -71,11 +71,13 @@ void *main_loop(void *args) {
                 break;
 
             case MES_MOVE:
+                if (character == NULL) break;
                 message_move->uuid = character->uuid;
                 game_add_event(game, character, message_move, sizeof(Message_Move));
                 break;
 
             case MES_ATTACK:
+                if (character == NULL) break;
                 message_attack->by_uuid = character->uuid;
                 game_add_event(game, character, message_attack, sizeof(Message_Attack));
                 break;
