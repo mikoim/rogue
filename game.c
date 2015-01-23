@@ -179,7 +179,7 @@ void game_routine_attack_us(Game *game, Message_Attack *message_attack) {
             Message_Profile profile;
             profile.type = MES_PROFILE;
             profile.status = STATUS_OK;
-            memcpy(&profile.profile, cb, sizeof(Message_Profile));
+            memcpy(&profile.profile, cb, sizeof(Character));
 
             packet_send(pb->sock, &profile, sizeof(Message_Profile));
         }
