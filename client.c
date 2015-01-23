@@ -61,19 +61,19 @@ void cui_set_profile(const Character *p) {
     sprintf(buf, "Name: %10s Lv:%3d", p->name, p->lv);
     mvwaddstr(statusWindow, 2, 3, buf);
 
-    sprintf(buf, "HP  : %s (%3d/%3d)", utils_genProgressbar(progress, p->hp.cur, p->hp.max, 10), p->hp.cur, p->hp.max);
+    sprintf(buf, "HP  : %s (%3ld/%3ld)", utils_genProgressbar(progress, p->hp.cur, p->hp.max, 10), p->hp.cur, p->hp.max);
     mvwaddstr(statusWindow, 3, 3, buf);
 
-    sprintf(buf, "EXP : %s (%3d/%3d)", utils_genProgressbar(progress, p->exp.cur, p->exp.max, 10), p->exp.cur, p->exp.max);
+    sprintf(buf, "EXP : %s (%3ld/%3ld)", utils_genProgressbar(progress, p->exp.cur, p->exp.max, 10), p->exp.cur, p->exp.max);
     mvwaddstr(statusWindow, 4, 3, buf);
 
-    sprintf(buf, "ATK : %3d", p->atk.cur);
+    sprintf(buf, "ATK : %3ld", p->atk.cur);
     mvwaddstr(statusWindow, 5, 3, buf);
 
-    sprintf(buf, "DEF : %3d", p->def.cur);
+    sprintf(buf, "DEF : %3ld", p->def.cur);
     mvwaddstr(statusWindow, 6, 3, buf);
 
-    sprintf(buf, "DEV : UUID = %2hu, Depth = %2hu, (%3hu,%3hu)", p->uuid, p->depth, p->x, p->y);
+    sprintf(buf, "DEV : UUID = %2hu, Depth = %2hhu, (%3hu,%3hu)", p->uuid, p->depth, p->x, p->y);
     mvwaddstr(statusWindow, 7, 3, buf);
 
     sprintf(buf, "DEV : Seed = %u", g_map.seed);
@@ -375,6 +375,8 @@ void *thread_network(void *args) {
     char buf[MAX_BUF];
 
     while (running) {
+        memset(buf, 0, MAX_BUF);
+
         if (packet_receive(sock, buf) < 0) {
             printf("Disconnected from server.\n");
             running = 0;
