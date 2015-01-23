@@ -220,8 +220,8 @@ void do_login() {
     }
 
     printf("\n[Login]\n");
-    strcpy(message_login.username, inputStrings(buf, "Username", 1, 10));
-    strcpy(message_login.password, inputStrings(buf, "Password", 1, 32));
+    memcpy(message_login.username, inputStrings(buf, "Username", 1, 10), 11);
+    memcpy(message_login.password, inputStrings(buf, "Password", 1, 32), 33);
 
     if (packet_send(sock, &message_login, sizeof(message_login)) < 0) running = 0;
 }
