@@ -40,34 +40,34 @@ int socket_listen(char *service) {
 
     if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout_tv, sizeof(struct timeval)) < 0) {
         perror("socket_listen() -> setsockopt(SO_RCVTIMEO)");
-        return -1;
     }
 
     if (setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &timeout_tv, sizeof(struct timeval)) < 0) {
         perror("socket_listen() -> setsockopt(SO_SNDTIMEO)");
-        return -1;
     }
 
     /* Bypass ANNOYING specification */
     int yes = 1;
     if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) < 0) {
         perror("socket_listen() -> setsockopt(SO_REUSEADDR)");
-        return -1;
     }
 
     /*  */
 
     if (bind(sock, serverAddress->ai_addr, serverAddress->ai_addrlen) < 0) {
         perror("socket_listen() -> bind()");
-        return -1;
-    }
-
-    if (listen(sock, 10) < 0) {
-        perror("socket_listen() -> listen()");
+        close(sock);
+        freeaddrinfo(serverAddress);
         return -1;
     }
 
     freeaddrinfo(serverAddress);
+
+    if (listen(sock, 10) < 0) {
+        perror("socket_listen() -> listen()");
+        close(sock);
+        return -1;
+    }
 
     return sock;
 }
@@ -108,6 +108,7 @@ int socket_connect(const char *hostname, char *service) {
 
         if (connect(sock, cur->ai_addr, cur->ai_addrlen) < 0) {
             perror("connectServer() -> connect()");
+            close(sock);
             sock = -1;
         } else {
             // Establish the connection
