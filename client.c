@@ -112,11 +112,14 @@ void cui_draw_map() {
     relbx = relux + COLS;
     relby = reluy + (LINES / 4 * 3);
 
+    //
     //map_sight_update(&g_map, 50, g_character.x, g_character.y);
 
     for (y = reluy; y <= relby + LINES / 4; y++)
         for (x = relux; x < relbx; x++) {
             if (absy + y < 0 || absy + y >= g_map.y || absx + x < 0 || absx + x >= g_map.x) {
+                if(y-reluy>=0 && y-reluy<LINES &&
+                        x-relux>=0 && x-relux<COLS)
                 mvwaddch(mapWindow, y - reluy, x - relux, ' ');
                 continue;
             }
@@ -128,6 +131,8 @@ void cui_draw_map() {
             }
             */
 
+            if(y-reluy>=0 && y-reluy<LINES &&
+                    x-relux>=0 && x-relux<COLS)
             switch (g_map.field[absy + y][absx + x]) {
                 case FIELD_TYPE_NONE:
                 default:
