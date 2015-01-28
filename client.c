@@ -114,6 +114,13 @@ void cui_set_player() {
     }
 }
 
+int cui_mvwaddch(WINDOW *win, int y, int x, chtype ch) {
+    if (x < 0 || y < 0 || x > COLS || y > LINES)
+        return ERR;
+
+    return mvwaddch(win, y, x, ch);
+}
+
 void cui_draw_map() {
     Character *c;
     LinkedList *t;
@@ -136,7 +143,7 @@ void cui_draw_map() {
     for (y = reluy; y <= relby + LINES / 4; y++)
         for (x = relux; x < relbx; x++) {
             if (absy + y < 0 || absy + y >= g_map.y || absx + x < 0 || absx + x >= g_map.x) {
-                mvwaddch(mapWindow, y - reluy, x - relux, ' ');
+                cui_mvwaddch(mapWindow, y - reluy, x - relux, ' ');
                 continue;
             }
 
@@ -150,19 +157,19 @@ void cui_draw_map() {
             switch (g_map.field[absy + y][absx + x]) {
                 case FIELD_TYPE_NONE:
                 default:
-                    mvwaddch(mapWindow, y - reluy, x - relux, '.');
+                    cui_mvwaddch(mapWindow, y - reluy, x - relux, '.');
                     break;
 
                 case FIELD_TYPE_ROAD:
-                    mvwaddch(mapWindow, y - reluy, x - relux, ' ');
+                    cui_mvwaddch(mapWindow, y - reluy, x - relux, ' ');
                     break;
 
                 case FIELD_TYPE_LADDER_UP:
-                    mvwaddch(mapWindow, y - reluy, x - relux, '>');
+                    cui_mvwaddch(mapWindow, y - reluy, x - relux, '>');
                     break;
 
                 case FIELD_TYPE_LADDER_DOWN:
-                    mvwaddch(mapWindow, y - reluy, x - relux, '<');
+                    cui_mvwaddch(mapWindow, y - reluy, x - relux, '<');
                     break;
             }
         }
@@ -176,9 +183,9 @@ void cui_draw_map() {
         if (c->uuid == g_character.uuid &&
                 c->y >= absy + reluy && c->y <= absy + relby &&
                 c->x >= absx + relux && c->x <= absx + relbx) {
-            mvwaddch(mapWindow, (c->y - absy) - reluy, (c->x - absx) - relux, COLOR_PAIR(1) | '@');
+            cui_mvwaddch(mapWindow, (c->y - absy) - reluy, (c->x - absx) - relux, COLOR_PAIR(1) | '@');
         } else {
-            mvwaddch(mapWindow, (c->y - absy) - reluy, (c->x - absx) - relux, utils_gen_enemy_char(&g_character, c));
+            cui_mvwaddch(mapWindow, (c->y - absy) - reluy, (c->x - absx) - relux, utils_gen_enemy_char(&g_character, c));
         }
     }
 }
@@ -522,7 +529,7 @@ int main(int argc, char *argv[]) {
 
     show_logWindow = 0;
     show_statusWindow = 1;
-    show_playerWindow = 1;
+    show_playerWindow = 0;
 
     do_login();
 
