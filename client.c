@@ -53,6 +53,25 @@ char *inputStrings(char *buf, const char *name, int min, int max) {
     return buf;
 }
 
+void cui_init() {
+    initscr();
+
+    start_color();
+    init_pair(1, COLOR_WHITE, COLOR_GREEN);
+    init_pair(2, COLOR_WHITE, COLOR_YELLOW);
+    init_pair(3, COLOR_WHITE, COLOR_RED);
+
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE);
+    curs_set(0);
+
+    mapWindow = stdscr;
+    logWindow = newwin(LINES / 4, COLS / 2 - 1, 3 * LINES / 4, 1);
+    statusWindow = newwin(LINES / 4, COLS / 3 - 2, 3 * LINES / 4, COLS / 2 + 1);
+    playerWindow = newwin(LINES / 4, COLS / 6 - 1, 3 * LINES / 4, 5 * COLS / 6 + 1);
+}
+
 void cui_set_profile(const Character *p) {
     char buf[MAX_BUF], progress[MAX_BUF];
 
@@ -425,28 +444,8 @@ void *thread_network(void *args) {
     return NULL;
 }
 
-void set_color_pair() {
-    init_pair(1, COLOR_WHITE, COLOR_GREEN);
-    init_pair(2, COLOR_WHITE, COLOR_YELLOW);
-    init_pair(3, COLOR_WHITE, COLOR_RED);
-}
-
 void *thread_cui(void *args) {
     int key;
-
-    initscr();
-    start_color();
-    set_color_pair();
-
-    cbreak(); // 入力バッファを使用しない
-    noecho(); // キー入力された文字を表示しない
-    keypad(stdscr, TRUE); // カーソルキーを有効にする
-    curs_set(0); // カーソルを表示しない
-
-    mapWindow = stdscr;
-    logWindow = newwin(LINES / 4, COLS / 2 - 1, 3 * LINES / 4, 1);
-    statusWindow = newwin(LINES / 4, COLS / 3 - 2, 3 * LINES / 4, COLS / 2 + 1);
-    playerWindow = newwin(LINES / 4, COLS / 6 - 1, 3 * LINES / 4, 5 * COLS / 6 + 1);
 
     while (running) {
         switch ((key = getch())) {
@@ -528,6 +527,8 @@ int main(int argc, char *argv[]) {
     do_login();
 
     packet_no_printf(1);
+
+    cui_init();
 
     pthread_create(&threads[0], NULL, thread_network, NULL);
     pthread_create(&threads[1], NULL, thread_cui, NULL);
