@@ -175,6 +175,15 @@ void game_routine_attack_us(Game *game, Message_Attack *message_attack) {
 
         linkedList_push(game->queue_event, &dead, sizeof(dead));
 
+        if (ct->type == CHARACTER_TYPE_PLAYER) {
+            Message_Profile profile;
+            profile.type = MES_PROFILE;
+            profile.status = STATUS_OK;
+            memcpy(&profile.profile, ct, sizeof(Character));
+
+            packet_send(pt->sock, &profile, sizeof(Message_Profile));
+        }
+
         game_find_player_by_uuid(game, ct->uuid, 1);
 
         if (game_routine_exp(cb) && cb->type == CHARACTER_TYPE_PLAYER) {
@@ -185,15 +194,6 @@ void game_routine_attack_us(Game *game, Message_Attack *message_attack) {
 
             packet_send(pb->sock, &profile, sizeof(Message_Profile));
         }
-    }
-
-    if (ct->type == CHARACTER_TYPE_PLAYER) {
-        Message_Profile profile;
-        profile.type = MES_PROFILE;
-        profile.status = STATUS_OK;
-        memcpy(&profile.profile, ct, sizeof(Character));
-
-        packet_send(pt->sock, &profile, sizeof(Message_Profile));
     }
 }
 

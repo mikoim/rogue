@@ -8,6 +8,7 @@
 #include "packet.h"
 #include "utils.h"
 #include "config.h"
+#include "message.h"
 
 Map g_map;
 Character g_character;
@@ -259,6 +260,9 @@ void do_move(int key) {
 
     uint16_t x = g_character.x, y = g_character.y;
 
+    if (running == 0)
+        return;
+
     memset(&message_move, 0, sizeof(message_move));
     memset(&message_attack, 0, sizeof(message_attack));
 
@@ -318,6 +322,12 @@ void do_move(int key) {
 void handler_profile(Message_Profile *message_profile) {
     if (message_profile->status == STATUS_OK) {
         memcpy(&g_character, &message_profile->profile, sizeof(Character));
+
+        if (message_profile->profile.hp.cur <= 0) {
+            running = 0;
+            socket_close(sock);
+        }
+
     } else {
         printf("Username or password is incorrect.\n");
         running = 0;
