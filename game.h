@@ -34,6 +34,8 @@ void game_leave(Game *game, Character *character);
 
 void game_add_event(Game *game, Character *character, void *message, size_t size);
 
+void game_add_event_us(Game *game, Character *character, void *message, size_t size);
+
 void game_correct_player_position_us(Game *game, Character *character);
 
 void game_routine_broadcast_message_us(Game *game, void *message, size_t size);

@@ -89,6 +89,8 @@ void *game_thread(void *args) {
 
         mob_routine_move(game);
 
+        mob_routine_attack(game);
+
         pthread_mutex_unlock(&game->lock);
 
         struct timespec sl = {0, 100000};
@@ -313,10 +315,14 @@ void game_leave(Game *game, Character *character) {
     pthread_mutex_unlock(&game->lock);
 }
 
+void game_add_event_us(Game *game, Character *character, void *message, size_t size) {
+    linkedList_push(game->queue_event, message, size);
+}
+
 void game_add_event(Game *game, Character *character, void *message, size_t size) {
     pthread_mutex_lock(&game->lock);
 
-    linkedList_push(game->queue_event, message, size);
+    game_add_event_us(game, character, message, size);
 
     pthread_mutex_unlock(&game->lock);
 }
