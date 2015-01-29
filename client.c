@@ -65,6 +65,7 @@ void cui_init() {
     noecho();
     keypad(stdscr, TRUE);
     curs_set(0);
+    timeout(500);
 
     mapWindow = stdscr;
     logWindow = newwin(LINES / 4, COLS / 2 - 1, 3 * LINES / 4, 1);
